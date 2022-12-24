@@ -11,10 +11,10 @@ class Plan(models.Model):
     date_created=models.DateTimeField(auto_now_add=True)
 
 class DistroUser(AbstractBaseUser):
-    user_id=models.CharField(default=uuid.uuid4, unique=True)
+    user_id=models.CharField(default=uuid.uuid4, max_length=24, unique=True)
     first_name=models.CharField(max_length=290)
-    last_name=models.CharField()
-    email=models.EmailField()
+    last_name=models.CharField(max_length=23)
+    email=models.EmailField(unique=True)
     account_number=models.IntegerField()
     plan=models.ForeignKey(Plan, on_delete=models.CASCADE)
     status=models.BooleanField(default=False)
