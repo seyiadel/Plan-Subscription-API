@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'distroapp',
+    'rest_framework',
+    'knox'
 ]
 
 AUTH_USER_MODEL = "distroapp.DistroUser"

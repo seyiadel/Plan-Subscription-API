@@ -7,7 +7,7 @@ import string
 # Create your models here.
 
 
-def generate_account_number():
+def generate_account_number() -> int:
     numbers='543' +''.join(random.choices(string.digits, k=6))
     account_number=int(numbers)
     return account_number
@@ -24,7 +24,7 @@ class DistroUser(AbstractUser):
     first_name=models.CharField(max_length=290)
     last_name=models.CharField(max_length=23)
     email=models.EmailField(unique=True)
-    account_number=models.IntegerField(default=generate_account_number(), null=True)
+    account_number=models.IntegerField(default=generate_account_number(),unique=True, null=True)
     plan=models.ForeignKey(Plan, null=True, blank=True, on_delete=models.CASCADE)
     status=models.BooleanField(default=False)
 
