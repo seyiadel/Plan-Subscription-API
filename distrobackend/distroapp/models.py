@@ -19,12 +19,12 @@ class Plan(models.Model):
     date_created=models.DateTimeField(auto_now_add=True)
 
 class DistroUser(AbstractUser):
-    user_id=models.CharField(default=uuid.uuid4, max_length=37, unique=True)
+    user_id=models.UUIDField(default=uuid.uuid4, max_length=37, unique=True)
     username = None
     first_name=models.CharField(max_length=290)
     last_name=models.CharField(max_length=23)
     email=models.EmailField(unique=True)
-    account_number=models.IntegerField(default=generate_account_number(),unique=True, null=True)
+    account_number=models.IntegerField(default=generate_account_number,unique=True, null=True)
     plan=models.ForeignKey(Plan, null=True, blank=True, on_delete=models.CASCADE)
     status=models.BooleanField(default=False)
 
