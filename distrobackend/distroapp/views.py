@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from distroapp.seriailizers import PlanSerializer
+from distroapp.seriailizers import PlanSerializer, RegisterDistroUserSerializer
 from distroapp.models import Plan
 from rest_framework.response import Response
 from rest_framework import status
+from knox.models import AuthToken
 
 # Create your views here.
 class PlanView(APIView):
@@ -44,4 +45,15 @@ class PlanDetailView(APIView):
         plan = Plan.objects.get(id=id)
         plan.delete()
         return Response(data="Plan Deleted", status=status.HTTP_204_NO_CONTENT)
-    
+
+
+class RegisterDistroUserView(APIView):
+    def post(self, request):
+        serializer= RegisterDistroUserSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user=serializer.save()
+            return Response({
+                'user':serializer.data,
+                'token':AuthToken.objects.create(user)[1],
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors)
