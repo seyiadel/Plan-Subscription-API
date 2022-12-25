@@ -10,3 +10,10 @@ class DistroUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = DistroUser
         fields= "__all__"
+        
+class RegisterDistroUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DistroUser
+        fields = ['first_name', 'last_name', 'email']
+
+
