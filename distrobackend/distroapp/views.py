@@ -1,13 +1,16 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from distroapp.seriailizers import PlanSerializer, RegisterDistroUserSerializer
-from distroapp.models import Plan
+from distroapp.seriailizers import PlanSerializer, RegisterDistroUserSerializer, LoginInDistroUserSerializer , DistroUserSerializer
+from distroapp.models import Plan, DistroUser
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions , authentication
 from knox.models import AuthToken
+from knox.views import LoginView as KnoxLoginAPIView
+from django.contrib.auth import login
 
 # Create your views here.
 class PlanView(APIView):
+
     def get(self, request):
         plan = Plan.objects.all()
         serializer=PlanSerializer(plan, many=True)
@@ -51,9 +54,17 @@ class RegisterDistroUserView(APIView):
     def post(self, request):
         serializer= RegisterDistroUserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            user=serializer.save()
-            return Response({
-                'user':serializer.data,
-                'token':AuthToken.objects.create(user)[1],
-            }, status=status.HTTP_201_CREATED)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors)
+
+class LoginDistroUserView(KnoxLoginAPIView):
+    permission_classes = (permissions.AllowAny, )
+
+    def post (self, request):
+        serializer = LoginInDistroUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return super().post(request, format=None)
+        
