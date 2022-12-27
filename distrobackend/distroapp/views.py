@@ -67,4 +67,11 @@ class LoginDistroUserView(KnoxLoginAPIView):
         user = serializer.validated_data['user']
         login(request, user)
         return super().post(request, format=None)
-        
+
+class DistroUserView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (authentication.TokenAuthentication,)
+
+    def get(self, request):
+        serializer = DistroUserSerializer(self.request.user)
+        return Response(serializer.data)

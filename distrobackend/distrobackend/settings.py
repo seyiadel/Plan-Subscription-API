@@ -47,7 +47,7 @@ AUTH_USER_MODEL = "distroapp.DistroUser"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ['knox.auth.TokenAuthentication',
-    'rest_framework.authentication.SessionAuthentication',]
+]
 
 }
 
