@@ -17,6 +17,7 @@ class PlanView(APIView):
         serializer=PlanSerializer(plan, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(request_body=LoginInDistroUserSerializer)
     def post(self, request):
         serializer=PlanSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -31,7 +32,7 @@ class PlanView(APIView):
         
 
 class PlanDetailView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    
     def get(self, request, id):
         plan= Plan.objects.get(id=id)
         serializer = PlanSerializer(plan)
@@ -52,6 +53,8 @@ class PlanDetailView(APIView):
 
 
 class RegisterDistroUserView(APIView):
+
+    @swagger_auto_schema(request_body=LoginInDistroUserSerializer)
     def post(self, request):
         serializer= RegisterDistroUserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -61,6 +64,7 @@ class RegisterDistroUserView(APIView):
 
 class LoginDistroUserView(KnoxLoginAPIView):
     permission_classes = (permissions.AllowAny,)
+
     @swagger_auto_schema(request_body=LoginInDistroUserSerializer)
     def post (self, request):
         serializer = LoginInDistroUserSerializer(data=request.data)
