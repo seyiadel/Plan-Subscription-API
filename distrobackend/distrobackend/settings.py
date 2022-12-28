@@ -48,9 +48,18 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = "distroapp.DistroUser"
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ['knox.auth.TokenAuthentication',
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication','knox.auth.TokenAuthentication',
 ]
+}
 
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+            }
+}
 }
 
 MIDDLEWARE = [

@@ -7,6 +7,7 @@ from rest_framework import status, permissions , authentication
 from knox.models import AuthToken
 from knox.views import LoginView as KnoxLoginAPIView
 from django.contrib.auth import login
+from drf_yasg.utils import swagger_auto_schema
 
 # Create your views here.
 class PlanView(APIView):
@@ -30,7 +31,7 @@ class PlanView(APIView):
         
 
 class PlanDetailView(APIView):
-    
+    permission_classes = (permissions.IsAuthenticated,)
     def get(self, request, id):
         plan= Plan.objects.get(id=id)
         serializer = PlanSerializer(plan)
@@ -59,8 +60,8 @@ class RegisterDistroUserView(APIView):
         return Response(serializer.errors)
 
 class LoginDistroUserView(KnoxLoginAPIView):
-    permission_classes = (permissions.AllowAny, )
-
+    permission_classes = (permissions.AllowAny,)
+    @swagger_auto_schema(request_body=LoginInDistroUserSerializer)
     def post (self, request):
         serializer = LoginInDistroUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
