@@ -8,16 +8,19 @@ from knox.models import AuthToken
 from knox.views import LoginView as KnoxLoginAPIView
 from django.contrib.auth import login
 from drf_yasg.utils import swagger_auto_schema
+from knox.auth import TokenAuthentication
 
 # Create your views here.
 class PlanView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = [TokenAuthentication,]
 
     def get(self, request):
         plan = Plan.objects.all()
         serializer=PlanSerializer(plan, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(request_body=LoginInDistroUserSerializer)
+    @swagger_auto_schema(request_body=PlanSerializer)
     def post(self, request):
         serializer=PlanSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -32,12 +35,15 @@ class PlanView(APIView):
         
 
 class PlanDetailView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = [TokenAuthentication,]
     
     def get(self, request, id):
         plan= Plan.objects.get(id=id)
         serializer = PlanSerializer(plan)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(request_body=PlanSerializer)
     def put(self, request, id):
         plan= Plan.objects.get(id=id)
         serializer = PlanSerializer(instance=plan, data=request.data)
@@ -54,7 +60,7 @@ class PlanDetailView(APIView):
 
 class RegisterDistroUserView(APIView):
 
-    @swagger_auto_schema(request_body=LoginInDistroUserSerializer)
+    @swagger_auto_schema(request_body=RegisterDistroUserSerializer)
     def post(self, request):
         serializer= RegisterDistroUserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -75,7 +81,7 @@ class LoginDistroUserView(KnoxLoginAPIView):
 
 class DistroUserView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = (authentication.TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,)
 
     def get(self, request):
         serializer = DistroUserSerializer(self.request.user)
