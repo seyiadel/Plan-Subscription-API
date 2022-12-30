@@ -9,6 +9,8 @@ from knox.views import LoginView as KnoxLoginAPIView
 from django.contrib.auth import login
 from drf_yasg.utils import swagger_auto_schema
 from knox.auth import TokenAuthentication
+import requests 
+from distrobackend import settings
 
 # Create your views here.
 class PlanView(APIView):
@@ -86,3 +88,19 @@ class DistroUserView(APIView):
     def get(self, request):
         serializer = DistroUserSerializer(self.request.user)
         return Response(serializer.data)
+
+
+class ProcessDistroPlan(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = [TokenAuthentication,]
+
+    def post(self, request, id):
+        plan = Plan.objects.get(pk=id)
+        url = "https://api.paystack.co/transaction/initialize"
+        headers = {"authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}"}
+        data= {"email": self.request.user.email,
+                    "amount": 1000,
+                    "plan":"PLN_udyyiqdwfceor2q",}
+        response = requests.post(url, headers=headers, data=data)
+        
+        return Response(response.json())

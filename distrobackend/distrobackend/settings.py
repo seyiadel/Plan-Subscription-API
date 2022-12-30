@@ -76,6 +76,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "distrobackend.urls"
 
+PAYSTACK_SECRET_KEY = "sk_test_455534f5a5603985bc146dbfe48c8b4cd2f56b5c"
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
