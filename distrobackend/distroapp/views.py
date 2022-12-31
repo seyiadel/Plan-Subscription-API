@@ -94,13 +94,28 @@ class ProcessDistroPlan(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = [TokenAuthentication,]
 
-    def post(self, request, id):
-        plan = Plan.objects.get(pk=id)
+    def post(self, request, plan_id):
+        plan = Plan.objects.get(pk=plan_id)
         url = "https://api.paystack.co/transaction/initialize"
         headers = {"authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}"}
         data= {"email": self.request.user.email,
-                    "amount": 1000,
-                    "plan":"PLN_udyyiqdwfceor2q",}
+                    "amount": plan.price,
+        }
         response = requests.post(url, headers=headers, data=data)
+        DistroUser.objects.filter(user_id=request.user.user_id).update(plan=plan)
         
         return Response(response.json())
+
+class VerifyDistroPayment(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = [TokenAuthentication,]
+
+    def get(self, request, reference):
+        url = "https://api.paystack.co/transaction/verify/{}".format(reference)
+        headers = {"authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}"}
+        response = requests.get(url, headers=headers)
+        payload=response.json()
+        if payload['data']['status']=='success':
+            DistroUser.objects.filter(user_id=request.user.user_id).update(status=True)
+        return Response(payload)
+

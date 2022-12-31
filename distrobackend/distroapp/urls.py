@@ -1,5 +1,5 @@
 from django.urls import path
-from distroapp.views import PlanView, PlanDetailView, RegisterDistroUserView, LoginDistroUserView, DistroUserView, ProcessDistroPlan
+from distroapp.views import PlanView, PlanDetailView, RegisterDistroUserView, LoginDistroUserView, DistroUserView, ProcessDistroPlan,VerifyDistroPayment
 from knox.views import LogoutView, LogoutAllView
 
 urlpatterns = [
@@ -10,5 +10,6 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('logout-all/',LogoutAllView.as_view(), name='logout_all'),
     path('user/', DistroUserView.as_view(), name='user'),
-    path('pay-now/<int:id>/', ProcessDistroPlan.as_view(), name='pay-now' )
+    path('pay-now/<int:plan_id>/', ProcessDistroPlan.as_view(), name='pay-now' ),
+    path('verify-payment/<str:reference>/', VerifyDistroPayment.as_view(), name='verify_payment'),
 ]
