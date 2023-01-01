@@ -96,6 +96,8 @@ class ProcessDistroPlan(APIView):
 
     def post(self, request, plan_id):
         plan = Plan.objects.get(pk=plan_id)
+        if self.request.user.status == True:
+            return Response(data="You still have a valid plan, Can't make payment for another plan")
         url = "https://api.paystack.co/transaction/initialize"
         headers = {"authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}"}
         data= {"email": self.request.user.email,
