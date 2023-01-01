@@ -15,7 +15,7 @@ def generate_account_number() -> int:
 class Plan(models.Model):
     name=models.CharField(max_length= 200)
     description=models.TextField() 
-    price=models.IntegerField()
+    price=models.FloatField()
     date_created=models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
