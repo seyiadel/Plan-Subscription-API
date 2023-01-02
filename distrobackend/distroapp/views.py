@@ -118,6 +118,7 @@ class VerifyDistroPayment(APIView):
         response = requests.get(url, headers=headers)
         payload = response.json()
         if payload['data']['status'] =='success':
-            DistroUser.objects.filter(user_id=request.user.user_id).update(status = True, plan_start_date = payload['data']['paid_at'])
+            DistroUser.objects.filter(user_id=request.user.user_id).update(status = True, 
+                                                                            plan_start_date = payload['data']['paid_at'])
         return Response(payload)
         

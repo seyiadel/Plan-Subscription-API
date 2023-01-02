@@ -24,9 +24,9 @@ schema_view = get_schema_view(
    openapi.Info(
       title="Plan Subscription API",
       default_version='v1',
-      description="Making one time payment to a plan per duration",
+      description="""This API allows payment/subscription based on plan duration.""",
       terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@snippets.local"),
+      contact=openapi.Contact(email="seyithedev@gmail.com"),
       license=openapi.License(name="BSD License"),
    ),
    public=True,
