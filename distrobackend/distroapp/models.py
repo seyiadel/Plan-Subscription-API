@@ -4,6 +4,7 @@ import uuid
 from distroapp.managers import DistroUserManager
 import random
 import string
+from datetime import timedelta
 # Create your models here.
 
 
@@ -16,6 +17,7 @@ class Plan(models.Model):
     name=models.CharField(max_length= 200)
     description=models.TextField() 
     price=models.FloatField()
+    duration = models.PositiveIntegerField()
     date_created=models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
@@ -30,7 +32,7 @@ class DistroUser(AbstractUser):
     account_number=models.IntegerField(default=generate_account_number,unique=True, null=True)
     plan=models.ForeignKey(Plan, null=True, blank=True, on_delete=models.CASCADE)
     status=models.BooleanField(default=False)
-
+    plan_start_date = models.DateTimeField(auto_created=False, auto_now_add=False, auto_now=False, blank=True, null=True)
     objects = DistroUserManager()
    
     USERNAME_FIELD = 'email'
@@ -38,3 +40,12 @@ class DistroUser(AbstractUser):
     
     def __str__(self) -> str:
         return self.email
+        
+    @property
+    def plan_end_date(self):
+        """this is to convert plan month to days, the days is set to
+        be 30 days due to company's policy"""
+        month = self.plan.duration * 30
+        end_date = self.plan_start_date + timedelta(days=month)
+        return end_date
+    
