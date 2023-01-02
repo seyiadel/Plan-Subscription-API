@@ -42,9 +42,9 @@ class DistroUser(AbstractUser):
         return self.email
         
     @property
-    def plan_end_date(self):
-        """this is to convert plan month to days, the days is set to
-        be 30 days due to company's policy"""
+    def plan_end_date_time(self):
+        """this is to convert plan duration (month) to days,
+        the days is set to be 30 days due to company's policy"""
         month = self.plan.duration * 30
         end_date = self.plan_start_date + timedelta(days=month)
         return end_date

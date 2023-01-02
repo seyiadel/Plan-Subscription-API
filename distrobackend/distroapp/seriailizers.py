@@ -8,6 +8,7 @@ class PlanSerializer(serializers.ModelSerializer):
         fields= "__all__"
 
 class DistroUserSerializer(serializers.ModelSerializer):
+    plan_end_date=serializers.DateTimeField(source='plan_end_date_time', read_only=True)
     class Meta:
         model = DistroUser
         fields= "__all__"

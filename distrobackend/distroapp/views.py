@@ -116,8 +116,8 @@ class VerifyDistroPayment(APIView):
         url = "https://api.paystack.co/transaction/verify/{}".format(reference)
         headers = {"authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}"}
         response = requests.get(url, headers=headers)
-        payload=response.json()
-        if payload['data']['status']=='success':
-            DistroUser.objects.filter(user_id=request.user.user_id).update(status=True, plan_start_date=payload['data']['paid_at'])
+        payload = response.json()
+        if payload['data']['status'] =='success':
+            DistroUser.objects.filter(user_id=request.user.user_id).update(status = True, plan_start_date = payload['data']['paid_at'])
         return Response(payload)
         
