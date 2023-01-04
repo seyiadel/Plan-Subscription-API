@@ -4,7 +4,7 @@ import uuid
 from distroapp.managers import DistroUserManager
 import random
 import string
-from datetime import timedelta
+from datetime import timedelta , datetime
 # Create your models here.
 
 
@@ -16,7 +16,7 @@ def generate_account_number() -> int:
 class Plan(models.Model):
     name=models.CharField(max_length= 200)
     description=models.TextField() 
-    price=models.FloatField()
+    price=models.DecimalField(max_digits=10, decimal_places=2)
     duration = models.PositiveIntegerField()
     date_created=models.DateTimeField(auto_now_add=True)
 
@@ -42,10 +42,15 @@ class DistroUser(AbstractUser):
         return self.email
         
     @property
-    def plan_end_date_time(self):
+    def plan_end_date(self):
         """this is to convert plan duration (month) to days,
         the days is set to be 30 days due to company's policy"""
         month = self.plan.duration * 30
         end_date = self.plan_start_date + timedelta(days=month)
         return end_date
     
+    def revert_status_to_false(self):
+        """This function to revert DistroUser.status to False when
+        plan_end_date is reached"""
+        if datetime.now() == self.plan_end_date:
+            return self.status == False

@@ -12,6 +12,7 @@ from knox.auth import TokenAuthentication
 import requests 
 from distrobackend import settings
 
+
 # Create your views here.
 class PlanView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
