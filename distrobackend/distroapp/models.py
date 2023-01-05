@@ -52,5 +52,8 @@ class DistroUser(AbstractUser):
     def revert_status_to_false(self):
         """This function to revert DistroUser.status to False when
         plan_end_date is reached"""
+        if not self.status:
+            return
         if datetime.now() == self.plan_end_date:
-            return self.status == False
+            self.status == False
+            return self.save(update_fields=["status"])
