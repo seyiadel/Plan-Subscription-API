@@ -23,19 +23,6 @@ class PlanView(APIView):
         serializer=PlanSerializer(plan, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(request_body=PlanSerializer)
-    def post(self, request):
-        serializer=PlanSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request):
-        plan=Plan.objects.all()
-        plan.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-        
 
 class PlanDetailView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -45,21 +32,6 @@ class PlanDetailView(APIView):
         plan= Plan.objects.get(id=id)
         serializer = PlanSerializer(plan)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-    @swagger_auto_schema(request_body=PlanSerializer)
-    def put(self, request, id):
-        plan= Plan.objects.get(id=id)
-        serializer = PlanSerializer(instance=plan, data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
-
-    def delete(self,request, id):
-        plan = Plan.objects.get(id=id)
-        plan.delete()
-        return Response(data="Plan Deleted", status=status.HTTP_204_NO_CONTENT)
-
 
 class RegisterDistroUserView(APIView):
 
