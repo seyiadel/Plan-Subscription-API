@@ -67,6 +67,11 @@ class PlanDetailAdminView(APIView):
     permission_classes = (permissions.IsAdminUser,)
     authentication_classes = (TokenAuthentication,)
 
+    def get(self, request, id):
+        plan= Plan.objects.get(id=id)
+        serializer = PlanSerializer(plan)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     @swagger_auto_schema(request_body=PlanSerializer)
     def put(self, request, id):
         plan= Plan.objects.get(id=id)
