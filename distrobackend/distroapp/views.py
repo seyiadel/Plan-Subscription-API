@@ -95,3 +95,4 @@ class VerifyDistroPayment(APIView):
                                                                             plan_start_date = payload['data']['paid_at'])
         return Response(payload)
         
+        
