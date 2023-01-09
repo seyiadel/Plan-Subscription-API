@@ -15,7 +15,7 @@ from distrobackend import settings
 
 # Create your views here.
 class PlanView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     authentication_classes = [TokenAuthentication,]
 
     def get(self, request):
@@ -25,7 +25,7 @@ class PlanView(APIView):
 
 
 class PlanDetailView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     authentication_classes = [TokenAuthentication,]
     
     def get(self, request, id):
@@ -69,12 +69,13 @@ class ProcessDistroPlan(APIView):
 
     def post(self, request, plan_id):
         plan = Plan.objects.get(pk=plan_id)
+        plan_price = plan.price * 100
         if self.request.user.status == True:
             return Response(data="You still have a valid plan, Can't make payment for another plan")
         url = "https://api.paystack.co/transaction/initialize"
         headers = {"authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}"}
         data= {"email": self.request.user.email,
-                    "amount": plan.price,
+                    "amount": plan_price,
         }
         response = requests.post(url, headers=headers, data=data)
         DistroUser.objects.filter(user_id=request.user.user_id).update(plan=plan)
