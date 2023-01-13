@@ -14,7 +14,17 @@ from distrobackend import settings
 
 
 # Create your views here.
+class IntroductionView(APIView):
+    def get(self, request):
+        return Response({"API_name":"Plan Subscription API",
+                        "Description":"This API allows Payment to be made per plan",
+                        "Swagger_documentation":"https://plan-subscription-api.onrender.com/swagger/",
+                        "Developer_contact":{"Twitter":"https://twitter.com/seyiadel","Linkedin":"https://linkedin.com/in/oluwaloseyi-adeleye/"},
+                        "API Github Repository":"https://github.com/seyiadel/Plan-Subscription-API/"})
+
 class PlanView(APIView):
+    """This is to get all plans created by the either the
+    staff or superuser and are available to be purchased"""
     permission_classes = (permissions.AllowAny,)
     authentication_classes = [TokenAuthentication,]
 
@@ -45,8 +55,9 @@ class RegisterDistroUserView(APIView):
 
 class LoginDistroUserView(KnoxLoginAPIView):
     permission_classes = (permissions.AllowAny,)
-
-    @swagger_auto_schema(request_body=LoginInDistroUserSerializer)
+    """process the login details(email and password) to a token
+    for authorization to be passed to as an header"""
+    @swagger_auto_schema(request_body=LoginInDistroUserSerializer) #allows POST request defined seriailzer parametars to be passed in Swagger 
     def post (self, request):
         serializer = LoginInDistroUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -78,7 +89,7 @@ class ProcessDistroPlan(APIView):
                     "amount": plan_price,
         }
         response = requests.post(url, headers=headers, data=data)
-        DistroUser.objects.filter(user_id=request.user.user_id).update(plan=plan)
+        DistroUser.objects.filter(user_id=request.user.user_id).update(plan=plan.name)
     
         return Response(response.json())
 

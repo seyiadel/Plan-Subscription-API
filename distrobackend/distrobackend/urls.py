@@ -29,7 +29,6 @@ schema_view = get_schema_view(
       contact=openapi.Contact(email="seyithedev@gmail.com"),
       license=openapi.License(name="BSD License"),
    ),
-   url='https://plan-subscription-api.onrender.com/',
    public=True,
    permission_classes=[permissions.AllowAny],
 )
@@ -38,7 +37,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('distroapp.urls')),
     path('', include('distroadmin.urls')),
-    re_path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    re_path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
 
 

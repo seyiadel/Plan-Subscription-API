@@ -1,8 +1,9 @@
 from django.urls import path
-from distroapp.views import PlanView, PlanDetailView, RegisterDistroUserView, LoginDistroUserView, DistroUserView, ProcessDistroPlan,VerifyDistroPayment
+from distroapp.views import IntroductionView, PlanView, PlanDetailView, RegisterDistroUserView, LoginDistroUserView, DistroUserView, ProcessDistroPlan,VerifyDistroPayment
 from knox.views import LogoutView, LogoutAllView
 
 urlpatterns = [
+    path('',IntroductionView.as_view(), name="main"),
     path('plan/', PlanView.as_view(), name="plan"),
     path('plan-detail/<int:id>/', PlanDetailView.as_view(), name="plan-detail"),
     path('register/', RegisterDistroUserView.as_view(), name="register"),

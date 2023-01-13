@@ -30,7 +30,7 @@ class DistroUser(AbstractUser):
     last_name=models.CharField(max_length=23)
     email=models.EmailField(unique=True)
     account_number=models.IntegerField(default=generate_account_number,unique=True, null=True)
-    plan=models.ForeignKey(Plan, null=True, blank=True, on_delete=models.CASCADE)
+    plan=models.CharField(max_length=50, null = True)
     status=models.BooleanField(default=False)
     plan_start_date = models.DateTimeField(auto_created=False, auto_now_add=False, auto_now=False, blank=True, null=True)
     objects = DistroUserManager()
